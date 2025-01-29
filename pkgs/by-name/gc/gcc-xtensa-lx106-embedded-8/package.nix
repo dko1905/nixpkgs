@@ -23,18 +23,22 @@ stdenv.mkDerivation rec {
   };
 
   dontBuild = true;
-  dontFixup = true;
+  # dontFixup = true;
 
   installPhase = ''
     cp -r . $out
-    find $out -type f | while read f; do
-      patchelf "$f" > /dev/null 2>&1 || continue
-      patchelf --set-interpreter $(cat ${stdenv.cc}/nix-support/dynamic-linker) "$f" || true
-      patchelf --set-rpath ${
-        lib.makeLibraryPath [ "$out" stdenv.cc.cc ]
-      } "$f" || true
-    done
   '';
+
+  # installPhase = ''
+  #   cp -r . $out
+  #   find $out -type f | while read f; do
+  #     patchelf "$f" > /dev/null 2>&1 || continue
+  #     patchelf --set-interpreter $(cat ${stdenv.cc}/nix-support/dynamic-linker) "$f" || true
+  #     patchelf --set-rpath ${
+  #       lib.makeLibraryPath [ "$out" stdenv.cc.cc ]
+  #     } "$f" || true
+  #   done
+  # '';
 
   meta = with lib; {
     description = "Pre-built GNU toolchain for ESP8266 processors";
